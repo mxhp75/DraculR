@@ -105,8 +105,8 @@ classifier_miRs <- data.frame(
 
 ui <- fluidPage(navbarPage(title = "DraculR",
                            
-                           tabPanel("Instructions",
-                                    tags$h5("Welcome to draculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
+                           tabPanel("Method",
+                                    tags$h5("Welcome to DraculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
                                     tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
                                     tags$h5(HTML(paste(
                                       "All code used to calculate data shown here is available at the following",
@@ -114,9 +114,26 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                     ))),
                                     tags$h5(HTML(paste(
                                       "In case you have questions",
-                                      tags$a(href="mailto::melanie.smith@adelaide.edu.au", "email me")
+                                      tags$a(href="mailto::melanie.smith@flinders.edu.au", "email me")
                                     ))),
                                     tags$br(),
+                                    tags$h5("Note: If you plan to use DraculR regularly, we suggest downloading a local copy rather than using a web version."),
+                                    tags$h5("Instructions on how to do this can be found on the github repository, or at minute 18:39 here",
+                                            tags$a(href="https://www.youtube.com/watch?v=vX3krP6JmOY&t=1119s", "NetworkChuck")
+                           )),
+                           
+                           tabPanel("Instructions",
+                                    # tags$h5("Welcome to draculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
+                                    # tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
+                                    # tags$h5(HTML(paste(
+                                    #   "All code used to calculate data shown here is available at the following",
+                                    #   tags$a(href="https://github.com/mxhp75/haemolysis_maternaPlasma.git", "git repository")
+                                    # ))),
+                                    # tags$h5(HTML(paste(
+                                    #   "In case you have questions",
+                                    #   tags$a(href="mailto::melanie.smith@adelaide.edu.au", "email me")
+                                    # ))),
+                                    # tags$br(),
                                     tags$h4("Getting started"),
                                     tags$br(),
                                     fluidRow(
@@ -141,19 +158,6 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       
                                       tags$img(src = "Picture_2.png")
                                     )
-                           ),
-                           
-                           tabPanel("Method",
-                                    tags$h5("Welcome to DraculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
-                                    tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
-                                    tags$h5(HTML(paste(
-                                      "All code used to calculate data shown here is available at the following",
-                                      tags$a(href="https://github.com/mxhp75/haemolysis_maternaPlasma.git", "git repository")
-                                    ))),
-                                    tags$h5(HTML(paste(
-                                      "In case you have questions",
-                                      tags$a(href="mailto::melanie.smith@flinders.edu.au", "email me")
-                                    )))
                            ),
                            
                            tabPanel("Public Data Example",
@@ -206,9 +210,6 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                         helpText("Max. file size is 5MB"),
                                         tags$hr(),
                                         h5(helpText("Select the input file parameters below")),
-                                        checkboxInput(inputId = 'header',
-                                                      label = 'Header?',
-                                                      value = TRUE),
                                         fluidRow(
                                           column = 6,
                                           h5(helpText("Add a project title")),
@@ -266,14 +267,7 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                         uiOutput("tb")
                                       )
                                     )
-                           # ),
-                            
-                           # tabPanel("Machine Learning",
-                           #          h3("This tab is currently ",
-                           #             tags$img(src = "underConstruction.png",
-                           #                          heigth = 300,
-                           #                          width = 300)))
-                           # 
+
 )))
   
 
@@ -290,7 +284,7 @@ server <- function(input, output) {
     if(is.null(file1)){return()} 
     read.table(file = file1$datapath,
                sep = input$sep,
-               header = input$header,
+               header = TRUE,
                # stringsAsFactors = input$stringAsFactors)
                stringsAsFactors = FALSE)
     
