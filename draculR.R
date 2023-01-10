@@ -105,6 +105,44 @@ classifier_miRs <- data.frame(
 
 ui <- fluidPage(navbarPage(title = "DraculR",
                            
+                           tabPanel("Instructions",
+                                    tags$h5("Welcome to draculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
+                                    tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
+                                    tags$h5(HTML(paste(
+                                      "All code used to calculate data shown here is available at the following",
+                                      tags$a(href="https://github.com/mxhp75/haemolysis_maternaPlasma.git", "git repository")
+                                    ))),
+                                    tags$h5(HTML(paste(
+                                      "In case you have questions",
+                                      tags$a(href="mailto::melanie.smith@adelaide.edu.au", "email me")
+                                    ))),
+                                    tags$br(),
+                                    tags$h4("Getting started"),
+                                    tags$br(),
+                                    fluidRow(
+                                      
+                                      column(4,
+                                             tags$img(src = "Picture_1.png", height = 300, width = 600)),
+                                      column(4,
+                                             tags$div(HTML(paste("The", tags$b("Public Data Example"), "tab allows you to click through the plot output and raw data of four datasets available on NCBI GEO that we have run through our method. Samples we consider", tags$b("Clear"), "are seen in light blue, those we consider should be used with", tags$b("Caution"), "are seen in scarlet.",
+                                                                 sep = " "
+                                             )))),
+                                      column(4,
+                                             tags$img(src = "drac.png", height = 300, width = 300))
+                                      
+                                    ),
+                                    br(),
+                                    fluidRow(
+                                      
+                                      column(8, 
+                                             tags$div(HTML(paste("To import new data, move to the", tags$b("Import new data"), "tab. From here click", tags$b("Browse"), "to access the required raw counts table from your computer. Importing a new file will populate the main page with a set of tabs that allow you to navigate through the new information. Your count data needs to be either a comma or tab delimited file with samples in the columns and miRNA count observations in the rows. Please ensure your column of miRNA names is titled", tags$b(paste("miRNA", "name", sep = "_")), "and that the miRNA names are in a", tags$b(paste("hsa", "miR", "123", "3p", sep = "-")), "format. Samplenames need to be in a", tags$b(paste("sample", "condition", sep = "_")), "format and should not include white space or special characters.", sep = " ")))
+                                      )),
+                                    fluidRow(
+                                      
+                                      tags$img(src = "Picture_2.png")
+                                    )
+                           ),
+                           
                            tabPanel("Method",
                                     tags$h5("Welcome to DraculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
                                     tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
@@ -116,42 +154,6 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       "In case you have questions",
                                       tags$a(href="mailto::melanie.smith@flinders.edu.au", "email me")
                                     )))
-                           ),
-                                                               tags$h5("Welcome to DraculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
-                                    tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
-                                    tags$h5(HTML(paste(
-                                      "All code used to calculate data shown here is available at the following",
-                                      tags$a(href="https://github.com/mxhp75/haemolysis_maternaPlasma.git", "git repository")
-                                    ))),
-                                    tags$h5(HTML(paste(
-                                      "In case you have questions",
-                                      tags$a(href="mailto::melanie.smith@flinders.edu.au", "email me")
-                                    ))),
-                                    tags$br(),
-                                    tags$h4("Getting started"),
-                                    tags$br(),
-                                    fluidRow(
-                                      
-                                      column(4,
-                                             tags$img(src = "Picture_1.png", height = 300, width = 600)),
-                                      column(4,
-                                             tags$div(HTML(paste("The", tags$b("Public Data Example"), "tab allows you to click through the plot output and raw data of four datasets available on NCBI GEO that we have run through our method. Samples we consider", tags$b("Clear"), "are seen in blue, those we consider should be used with", tags$b("Caution"), "are seen in red",
-                                                           sep = " "
-                                                     )))),
-                                      column(4,
-                                             tags$img(src = "drac.png", height = 300, width = 300))
-                                      
-                                    ),
-                                    br(),
-                                    fluidRow(
-                                      
-                                      column(8, 
-                                      tags$div(HTML(paste("To import new data, move to the", tags$b("Import New Data"), "tab. From here click", tags$b("Browse"), "to access the required raw counts table from your computer. Importing a new file will populate the main page with a set of tabs that allow you to navigate through the new information. Your count data needs to be either a comma or tab delimited file with samples in the columns and miRNA count observations in the rows. Please ensure your column of miRNA names is titled", tags$b(paste("miRNA", "name", sep = "_")), "and that the miRNA names are in a", tags$b(paste("hsa", "miR", "123", "3p", sep = "-")), "format. Samplenames need to be in a", tags$b(paste("sample", "condition", sep = "_")), "format and should not include white space or special characters.", sep = " ")))
-                           )),
-                                    fluidRow(
-                             
-                                    tags$img(src = "Picture_2.2.png", height = 800, width = 700)
-                           )
                            ),
                            
                            tabPanel("Public Data Example",
@@ -203,10 +205,10 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                         fileInput("rawDataFile","Upload the file"), # fileinput() function is used to get the file upload control option
                                         helpText("Max. file size is 5MB"),
                                         tags$hr(),
-                                        # h5(helpText("Select the input file parameters below")),
-                                        # checkboxInput(inputId = 'header',
-                                        #               label = 'Header?',
-                                        #               value = TRUE),
+                                        h5(helpText("Select the input file parameters below")),
+                                        checkboxInput(inputId = 'header',
+                                                      label = 'Header?',
+                                                      value = TRUE),
                                         fluidRow(
                                           column = 6,
                                           h5(helpText("Add a project title")),
