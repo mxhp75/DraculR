@@ -20,9 +20,6 @@ The test dataset can be found <a href="https://github.com/mxhp75/DraculR/tree/ma
 
 for removal from the calculation before calculating the Haemolysis Metric for these data.
 
-### Haemolysis Metric
-
-
 ### How to clone this repository
 
 If you plan on using DraculR regularly, we suggest you clone this repository and run locally (you will need RStudio for this).
