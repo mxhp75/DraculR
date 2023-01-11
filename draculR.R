@@ -105,29 +105,40 @@ classifier_miRs <- data.frame(
 
 ui <- fluidPage(navbarPage(title = "DraculR",
                            
-                           tabPanel("Method",
-                                    tags$h5("Welcome to DraculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
-                                    tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
-                                    tags$h5(HTML(paste(
-                                      "All code used to calculate data shown here is available at the following",
-                                      tags$a(href="https://github.com/mxhp75/DraculR.git", "git repository")
-                                    ))),
-                                    tags$h5(HTML(paste(
-                                      "In case you have questions",
-                                      tags$a(href="mailto::melanie.smith@flinders.edu.au", "email me")
-                                    ))),
-                                    
-                                    tags$h5(HTML(paste(
-                                      "Note: If you plan to use DraculR regularly, we suggest downloading a local copy rather than using a web version. Instructions on how to do this can be found on the github repository, or at minute 18:39 here",
-                                      tags$a(href="https://www.youtube.com/watch?v=vX3krP6JmOY&t=1119s", "NetworkChuck")
-                                    ))),
-                                    
-                                    tags$h5(HTML(paste(
-                                      "or here",
-                                      tags$a(href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository", "GitHub")
-                                    )))
-                           ),
-                           
+                           tabPanel("Methods",
+                                    tags$h4("Background"),
+                                    tags$br(),
+                                    fluidRow(
+                                      
+                                      column(8,
+                                             tags$h5("Welcome to DraculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
+                                             tags$h5(HTML(paste(
+                                               "All code used to calculate data shown here is available at the following",
+                                               tags$a(href="https://github.com/mxhp75/DraculR.git", "git repository")
+                                             )))),
+                                      column(8,
+                                             tags$h5(HTML(paste(
+                                               "If you have questions",
+                                               tags$a(href="mailto::melanie.smith@flinders.edu.au", "email me")
+                                               )))),
+                                      
+                                      column(8,
+                                             tags$h5(HTML(paste(
+                                               "Note: If you plan to use DraculR regularly, we suggest downloading a local copy rather than using a web version. Instructions on how to do this can be found on the github repository, or at minute 18:39 here",
+                                               tags$a(href="https://www.youtube.com/watch?v=vX3krP6JmOY&t=1119s", "NetworkChuck"), "or here", tags$a(href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository", "GitHub")
+                                             )))),
+                                      
+                                      column(8,
+                                             tags$h5(HTML(paste(
+                                               "The Haemolysis metric described",
+                                               tags$a(href="https://doi.org/10.3390/genes13071288", "here"),
+                                               "and implemented in the DraculR ShinyR web-based application, performs an", tags$i("in silico"), "quality assessment to detect evidence of haemolysis contamination in the original plasma specimen, assigning each small RNA sequencing dataset into one of two categories.",
+                                               "The classification of ‘Clear’ or ‘Caution’ alert the user to potential quality control issues in specimen."
+                                             ))))
+                                      
+                                      )
+                                    ),
+
                            tabPanel("Instructions",
 
                                     tags$h4("Getting started"),
@@ -152,7 +163,7 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       )),
                                     fluidRow(
                                       
-                                      tags$img(src = "Picture_2.png")
+                                      tags$img(src = "Picture_2.png", height="40%", width="40%")
                                     )
                            ),
                            
@@ -200,12 +211,12 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                     )),
                            
                            tabPanel("Import New Data",
+                                    
                                     sidebarLayout(
                                       sidebarPanel(
                                         fileInput("rawDataFile","Upload the file"), # fileinput() function is used to get the file upload control option
                                         helpText("Max. file size is 5MB"),
                                         tags$hr(),
-                                        h5(helpText("Select the input file parameters below")),
                                         fluidRow(
                                           column = 6,
                                           h5(helpText("Add a project title")),
@@ -214,27 +225,31 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                                     "myProjectName"),
                                           verbatimTextOutput("value"),
                                           column = 6, offset = 6,
-                                          h5(helpText("Apply your filtering value")),
-                                          numericInput("filterNum", label = h5("Number in smallest group"), value = 1)) %>% 
-                                          helper(icon = "exclamation",
-                                                 colour = "green",
-                                                 type = "markdown",
-                                                 content = "filtering"),
-                                        # h5(helpText("Add a project title")),
-                                        # textInput(inputId = "project",
-                                        #           label = "Project",
-                                        #                   "myProjectName"),
-                                        # verbatimTextOutput("value"),
+                                          
+                                          h5(helpText("Apply your filtering value"))  %>% 
+                                            
+                                            helper(icon = "question",
+                                                   colour = "green",
+                                                   type = "markdown",
+                                                   content = "filtering"),
+
+                                          numericInput("filterNum", label = h5("Number in smallest group"), value = 1)),
+ 
+                                        h5(helpText("Select the input file parameters below")),
+                                        
                                         radioButtons(inputId = 'sep',
                                                      label = 'File separator',
                                                      choices = c(Comma = ',',
                                                                  Tab = '\t'),
                                                      selected = ','),
+                                        
                                         h5(helpText("Select any miRNA that are differentially expressed between your groups ")) %>% 
-                                          helper(icon = "exclamation",
-                                                 colour = "red",
+
+                                          helper(icon = "question",
+                                                 colour = "green",
                                                  type = "markdown",
                                                  content = "drop"),
+
                                         checkboxGroupInput(inputId = 'drop_miRs',
                                                      label = "Drop?",
                                                      choices = c("hsa-miR-106b-3p" = 'hsa-miR-106b-3p',
@@ -257,7 +272,9 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                                                  "hsa-miR-192-5p" = 'hsa-miR-192-5p',
                                                                  "hsa-miR-194-5p" = "hsa-miR-194-5p",
                                                                  "hsa-miR-20b-5p" = 'hsa-miR-20b-5p'),
-                                                     textOutput("txt"))),
+                                                     textOutput("txt")
+                                                     )
+                                        ),
                                       
                                       mainPanel(
                                         uiOutput("tb")
