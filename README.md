@@ -1,7 +1,5 @@
----
-title: "DraculR"
-subtitle: "A public repository for the DraculR Shiny Application."
----
+# DraculR
+## A public repository for the DraculR Shiny Application.
 
 DraculR is a new lightweight tool for haemolysis detection in human plasma miR-Seq datasets.
 
@@ -22,7 +20,10 @@ The test dataset can be found <a href="https://github.com/mxhp75/DraculR/tree/ma
 
 for removal from the calculation before calculating the Haemolysis Metric for these data.
 
-## How to clone this repository
+### Haemolysis Metric
+
+
+### How to clone this repository
 
 If you plan on using DraculR regularly, we suggest you clone this repository and run locally (you will need RStudio for this).
 
@@ -34,4 +35,7 @@ To create a local copy of the DraculR tool simply open your terminal and type th
   $ cd folder/to/clone-into/
   $ git clone https://github.com/mxhp75/DraculR
 ```
+
+You can now open the `draculR.R` script and Run from RStudio.
+
 [^fn1]: Smith, Melanie D., Shalem Y. Leemaqz, Tanja Jankovic-Karasoulos, Dale McAninch, Dylan McCullough, James Breen, Claire T. Roberts, and Katherine A. Pillman. 2022. “Haemolysis Detection in MicroRNA-Seq from Clinical Plasma Samples.” Genes 13 (7). https://doi.org/10.3390/genes13071288.
