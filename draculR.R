@@ -110,30 +110,26 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                     tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
                                     tags$h5(HTML(paste(
                                       "All code used to calculate data shown here is available at the following",
-                                      tags$a(href="https://github.com/mxhp75/haemolysis_maternaPlasma.git", "git repository")
+                                      tags$a(href="https://github.com/mxhp75/DraculR.git", "git repository")
                                     ))),
                                     tags$h5(HTML(paste(
                                       "In case you have questions",
                                       tags$a(href="mailto::melanie.smith@flinders.edu.au", "email me")
                                     ))),
-                                    tags$br(),
-                                    tags$h5("Note: If you plan to use DraculR regularly, we suggest downloading a local copy rather than using a web version."),
-                                    tags$h5("Instructions on how to do this can be found on the github repository, or at minute 18:39 here",
-                                            tags$a(href="https://www.youtube.com/watch?v=vX3krP6JmOY&t=1119s", "NetworkChuck")
-                           )),
+                                    
+                                    tags$h5(HTML(paste(
+                                      "Note: If you plan to use DraculR regularly, we suggest downloading a local copy rather than using a web version. Instructions on how to do this can be found on the github repository, or at minute 18:39 here",
+                                      tags$a(href="https://www.youtube.com/watch?v=vX3krP6JmOY&t=1119s", "NetworkChuck")
+                                    ))),
+                                    
+                                    tags$h5(HTML(paste(
+                                      "or here",
+                                      tags$a(href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository", "GitHub")
+                                    )))
+                           ),
                            
                            tabPanel("Instructions",
-                                    # tags$h5("Welcome to draculR, a Shiny App designed to help you detect red blood cell content contamination in miR-Seq data from human plasma."),
-                                    # tags$h5("This App uses a new method to allocate individual samples into risk groups for haemolysis."),
-                                    # tags$h5(HTML(paste(
-                                    #   "All code used to calculate data shown here is available at the following",
-                                    #   tags$a(href="https://github.com/mxhp75/haemolysis_maternaPlasma.git", "git repository")
-                                    # ))),
-                                    # tags$h5(HTML(paste(
-                                    #   "In case you have questions",
-                                    #   tags$a(href="mailto::melanie.smith@adelaide.edu.au", "email me")
-                                    # ))),
-                                    # tags$br(),
+
                                     tags$h4("Getting started"),
                                     tags$br(),
                                     fluidRow(
