@@ -125,18 +125,27 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       column(8,
                                              tags$h5(HTML(paste(
                                                "Note: If you plan to use DraculR regularly, we suggest downloading a local copy rather than using a web version. Instructions on how to do this can be found on the github repository, or at minute 18:39 here",
-                                               tags$a(href="https://www.youtube.com/watch?v=vX3krP6JmOY&t=1119s", "NetworkChuck"), "or here", tags$a(href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository", "GitHub")
+                                               tags$a(href="https://www.youtube.com/watch?v=vX3krP6JmOY&t=1119s", "NetworkChuck"),
+                                               "or here",
+                                               tags$a(href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository", "GitHub")
                                              )))),
                                       
                                       column(8,
                                              tags$h5(HTML(paste(
                                                "The Haemolysis metric described",
                                                tags$a(href="https://doi.org/10.3390/genes13071288", "here"),
-                                               "and implemented in the DraculR ShinyR web-based application, performs an", tags$i("in silico"), "quality assessment to detect evidence of haemolysis contamination in the original plasma specimen, assigning each small RNA sequencing dataset into one of two categories.",
-                                               "The classification of ‘Clear’ or ‘Caution’ alert the user to potential quality control issues in specimen."
-                                             ))))
+                                               "and implemented in the DraculR ShinyR web-based application, performs an", tags$i("in silico"), "quality assessment to detect evidence of haemolysis contamination in the original plasma specimen, assigning each small RNA sequencing dataset into one of two categories."
+                                             )))),
                                       
-                                      )
+                                      column(8,
+                                             tags$h5("The classification of ‘Clear’ or ‘Caution’ is designed to alert the user to potential quality control issues in the original plasma specimen."))
+                                      
+                                      ),
+                                    
+                                    tags$br(),
+                                    tags$h4("Application")
+                                    
+                                    
                                     ),
 
                            tabPanel("Instructions",
