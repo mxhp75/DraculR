@@ -106,8 +106,10 @@ classifier_miRs <- data.frame(
 ui <- fluidPage(navbarPage(title = "DraculR",
                            
                            tabPanel("Methods",
+                                    
                                     tags$h4("Background"),
                                     tags$br(),
+                                    
                                     fluidRow(
                                       
                                       column(8,
@@ -134,7 +136,9 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                              tags$h5(HTML(paste(
                                                "The Haemolysis metric described",
                                                tags$a(href="https://doi.org/10.3390/genes13071288", "here"),
-                                               "and implemented in the DraculR ShinyR web-based application, performs an", tags$i("in silico"), "quality assessment to detect evidence of haemolysis contamination in the original plasma specimen, assigning each small RNA sequencing dataset into one of two categories."
+                                               "and implemented in the DraculR ShinyR web-based application, performs an",
+                                               tags$i("in silico"),
+                                               "quality assessment to detect evidence of haemolysis contamination in the original plasma specimen, assigning each small RNA sequencing dataset into one of two categories."
                                              )))),
                                       
                                       column(8,
@@ -143,9 +147,50 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       ),
                                     
                                     tags$br(),
-                                    tags$h4("Application")
+                                    tags$h4("Application"),
                                     
-                                    
+                                    fluidRow(
+
+                                      column(8,
+                                             tags$h5(HTML(paste(
+                                               "DraculR provides a simple graphical user interface (GUI) that allows the user to upload small RNA sequencing data in the form of a raw counts table with names in mature miRNA format (e.g. hsa-miR-1-5p).",
+                                               "The",
+                                               tags$b("Import New Data"), 
+                                               "tab provides the option to personalise table and figure titles, set filtering options and remove miRNA known to be differentially abundent between the user groups of interest",
+                                               "from the calculation of the Haemolysis Metric.", "This final step ensures the calculation for haemolysis is not confounded in the event that one or more of the miRNA signature set is known to differ between groups.",
+                                               sep = " "
+                                               )))),
+                                      
+                                      column(12,
+                                             p(
+                                               tags$img(
+                                                 src = "distribution.png",
+                                                 alt = "Side by side distributions",
+                                                 width = 800,
+                                                 height = 500
+                                               ),
+                                               ""
+                                             )),
+                                      column(6,
+                                             p(
+                                               "Figure 1: In the first example (a) the sample is classified as ‘Clear’ indicating no evidence for haemolysis. The distance between the geometric mean of background and signature set miRNA is small. In the second example (b) the sample is classified as ‘Caution’ indicating that we found evidence suggestive of haemolysis. The geometric mean of background and signature set miRNA is further apart than that expected where no haemolysis is present."
+                                               )),
+                                      
+                                      column(12,
+                                             p(
+                                               tags$img(
+                                                 src = "step_1.png",
+                                                 alt = "Step 1. Upload, filter and normalise",
+                                                 width = 800,
+                                                 height = 320
+                                               ),
+                                               ""
+                                             )),
+                                      column(6,
+                                             p(
+                                               "Step 1: Import a raw counts table generated by high throughput miRNA sequencing of human plasma libraries. These data will be filtered according to user specified requirements (n = number of samples in the smallest group of interest) and normalised using the Trimmed Mean of M (TMM) method."
+                                             ))
+                                      )
                                     ),
 
                            tabPanel("Instructions",
@@ -157,9 +202,14 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       column(4,
                                              tags$img(src = "Picture_1.png", height = 300, width = 600)),
                                       column(4,
-                                             tags$div(HTML(paste("The", tags$b("Public Data Example"), "tab allows you to click through the plot output and raw data of four datasets available on NCBI GEO that we have run through our method. Samples we consider", tags$b("Clear"), "are seen in light blue, those we consider should be used with", tags$b("Caution"), "are seen in scarlet.",
-                                                                 sep = " "
-                                             )))),
+                                             tags$div(HTML(paste(
+                                               "The",
+                                               tags$b("Public Data Example"),
+                                               "tab allows you to click through the plot output and raw data of four datasets available on NCBI GEO that we have run through our method. Samples we consider",
+                                               tags$b("Clear"), "are seen in blue, those we consider should be used with",
+                                               tags$b("Caution"), "are seen in red",
+                                               sep = " "
+                                               )))),
                                       column(4,
                                              tags$img(src = "drac.png", height = 300, width = 300))
                                       
@@ -178,7 +228,7 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                            
                            tabPanel("Public Data Example",
                                     
-                                    br(),
+                                    tags$br(),
                                     
                                     tags$h5("Click one of these buttons to see the results"),
                                     
