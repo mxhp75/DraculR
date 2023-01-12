@@ -160,7 +160,23 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                                "from the calculation of the Haemolysis Metric.", "This final step ensures the calculation for haemolysis is not confounded in the event that one or more of the miRNA signature set is known to differ between groups.",
                                                sep = " "
                                                )))),
+                                        
+                                        column(8,
+                                               tags$h5(HTML(paste(
+                                                 "In Figure 1 we present an example distribution illustrative of a dataset classified as Clear (Figure 1a) and as one as Caution (Figure 1b).",
+                                                 "In the first example (Figure 1a), the distance between the geometric mean of the background miRNA (blue) compared to that of the signature set miRNA (red) is very small whereas in the second example (Figure 1b) the distance between the geometric mean of the background miRNA compared to that of the signature set miRNA is larger.",
+                                                 "Furthermore, this difference is greater than the Haemolysis Metric threshold of 1.9, established in",
+                                                 tags$a(href="http://dx.doi.org/10.3390/genes13071288", "Smith et al."),
+                                                 ", and thus the sample has been classified as ‘Caution’.",
+                                                 "In Figure 1b the signature set distribution suggests these miRNAs are over-represented relative to Figure 1a",
+                                                 "This suggests that RBC-associated miRNA have been added to the pool of miRNA isolated in the plasma.",
+                                                 "In the haemolysed example (Figure 1b), we would recommend removing the sample data from further analysis.",
+                                                 "However, where a decision is made to retain samples, the issue of haemolysis should be noted and may be a limitation to inference.",
+                                                 sep = " "
+                                               ))))
+                                      ),
                                       
+                                    fluidRow(
                                       column(12,
                                              p(
                                                tags$img(
@@ -171,11 +187,33 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                                ),
                                                ""
                                              )),
-                                      column(6,
+                                      column(4,
                                              p(
                                                "Figure 1: In the first example (a) the sample is classified as ‘Clear’ indicating no evidence for haemolysis. The distance between the geometric mean of background and signature set miRNA is small. In the second example (b) the sample is classified as ‘Caution’ indicating that we found evidence suggestive of haemolysis. The geometric mean of background and signature set miRNA is further apart than that expected where no haemolysis is present."
-                                               )),
-                                      
+                                               ))
+                                      ),
+                                    
+                                    tags$br(),
+                                    tags$h4("Data input"),
+                                    
+                                    fluidRow(
+                                      column(8,
+                                             tags$h5(HTML(paste(
+                                               "DraculR allows the user to upload a raw, high throughput sequencing counts table for analysis.",
+                                               "Normalisation is performed using the Trimmed Mean of M method (TMM) previously recommended in the",
+                                               tags$a(href="http://dx.doi.org/10.1093/bioinformatics/btp616", "edgeR"),
+                                               "workflow and the user controls features such as filtering for low expression (Step 1) and refining the haemolysis signature set based on",
+                                               tags$i("a priori"),
+                                               "knowledge of miRNAs that may be differentially expressed in the comparison of interest (Step 2).",
+                                               "The purpose of removing miRNAs with a known association to the condition of interest is to help ensure any issues with haemolysis are not confounded with the research hypothesis.",
+                                               "Note that samples with total miRNA read counts < 1 million are considered to be poorly sequenced and are recommended to be removed for quality control.",
+                                               sep = " "
+                                             ))))
+                                    ),
+                                    
+                                    tags$br(),
+
+                                    fluidRow(
                                       column(12,
                                              p(
                                                tags$img(
@@ -186,9 +224,59 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                                ),
                                                ""
                                              )),
-                                      column(6,
+                                      column(4,
                                              p(
                                                "Step 1: Import a raw counts table generated by high throughput miRNA sequencing of human plasma libraries. These data will be filtered according to user specified requirements (n = number of samples in the smallest group of interest) and normalised using the Trimmed Mean of M (TMM) method."
+                                             )),
+
+                                      column(12,
+                                             p(
+                                               tags$img(
+                                                 src = "step_2.png",
+                                                 alt = "Step 2. Calculate the distribution difference",
+                                                 width = 800,
+                                                 height = 320
+                                               ),
+                                               ""
+                                             )),
+                                      column(4,
+                                             p(
+                                               paste("Step 2: The distribution difference between the background and signature miRNA counts is calculated on an individual sample basis allowing the user to upload one to many samples as required. In the case of",
+                                                     tags$i("a priori"),
+                                                     "knowledge of miRNA differentially abundant between a tested condition/control paradigm the user may choose to reduce the signature miRNA such that they do not include miRNA of interest (recommended).",
+                                                     sep = " "
+                                             )))
+
+                                      ),
+                                    
+                                    tags$br(),
+                                    tags$h4("Visualisation"),
+                                    
+                                    fluidRow(
+                                      
+                                      column(8,
+                                             tags$h5(
+                                               "An essential feature of DraculR is that it allows users to visualise and assess the values obtained in the results, through sample specific and consolidated graphics including density plots, histograms and tables (Step 3). These features help the user decide on the level of haemolysis that may affect their analysis by providing a new quality metric. Using this metric the user may choose to remove samples from downstream analyses. However, irrespective of whether samples with a Haemolysis Metric above the suggested threshold are removed or retained, the new information may be important to the analysis of their miRNA sequencing data."
+                                             ))
+                                      ),
+                                      
+                                      tags$br(),
+                                    
+                                    fluidRow(
+                                      
+                                      column(12,
+                                             p(
+                                               tags$img(
+                                                 src = "step_3.png",
+                                                 alt = "Step 3. Visualise and interpret results",
+                                                 width = 800,
+                                                 height = 320
+                                               ),
+                                               ""
+                                             )),
+                                      column(6,
+                                             p(
+                                               "Step 3: Graphical results in the form of a density plot of individual distributions (i, ii) and a histogram of combined distribution differences (iv) are provided along with a combined table of results (iii). The user is provided with both a metric describing the amount of haemolysis and, if appropriate, a recommendation of caution (iii)."
                                              ))
                                       )
                                     ),
