@@ -930,13 +930,19 @@ server <- function(input, output) {
   output$dist_diff <- renderPlot({
     if(is.null(uploadData())){return ()}
     
-    # This code renders the barPlot/barcodePlot for public data examples
+    # This code renders the barPlot/barcodePlot for the user uploaded data
     
     # Background Barcode
     ## New facet label names for haemolysis variable
     ## needed to rename the facets
-    barcode.labs <- c("Haemolysed \n(dCq)", "Clear \n(dCq)")
+    # barcode.labs <- c("Haemolysed \n(dCq)", "Clear \n(dCq)")
+    barcode.labs = c("", "")
     names(barcode.labs) <- c("haemolysed", "none")
+    
+    geomTextInfo <- data.frame(
+      label = c("Haemolysed \n(dCq)", "Clear \n(dCq)"),
+      haemolysis = c("haemolysed", "none")
+    )
     
     # Make the background Barcode plot
     backgroundDataPlot <- ggplot() +
@@ -946,22 +952,44 @@ server <- function(input, output) {
                  aes(xintercept = distributionDifference,
                      color = haemolysis),
                  size = 1) +
-      coord_cartesian(xlim=c(0,5)) +
+      
+      coord_cartesian(xlim=c(0,5),
+                      clip = "off") +
+      
       xlab("Haemolysis Metric") +
+      
       scale_colour_manual(values = c("#8B0000", "#29569D"),
                           name = "Haemolysis",
-                          labels = c("Haemolysed \n(dCq)", "Clear \n(dCq)")) +
+                          # labels = c("Haemolysed \n(dCq)", "Clear \n(dCq)")) +
+                          labels = c("", "")) +
+      
       facet_grid(haemolysis ~ .,
                  # move the labels from right side to left side
                  switch = "y",
                  # swap out the old labels for the new ones
                  labeller = labeller(haemolysis = barcode.labs)) +
-      # reduce the vertical margin between facets
-      theme(strip.text.y = element_text(margin = margin(0)),
-            # increase the x-axis title font size
+      
+      theme_minimal() +
+      
+      # add the geom_text layer to replace the y-axis labels
+      geom_text(
+        data    = geomTextInfo,
+        mapping = aes(x = -.5,
+                      y = 0.1,
+                      label = label)) +
+      
+      # tweak labels, margins etc
+      theme(strip.text.y = element_text(margin = margin(0),
+                                        size = 14),
+            strip.text.y.left = element_text(angle = 0),
+            axis.title = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank(),
             axis.title.x = element_text(size = 16),
-            # set the x-axis text font size
-            axis.text.x = element_text(size = 13))
+            axis.text.x = element_text(size = 13), 
+            plot.margin = margin(t=0,r=0,b=1,l=2.5, "cm"),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank())
     
     # make the upload data bar plot
     newDataPlot <- ggplot() +
