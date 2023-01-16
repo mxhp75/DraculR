@@ -33,6 +33,25 @@ To create a local copy of the DraculR tool simply open your terminal and type th
   $ git clone https://github.com/mxhp75/DraculR
 ```
 
+Please ensure the following packages are installed on your local machine:
+```r
+- library(dplyr)
+- library(plyr)
+- library(ggplot2)
+- library(patchwork)
+- library(shiny)
+- library(ggrepel)
+- library(scales) # For percent_format()
+- library(tidyr)
+- library(magrittr)
+- library(reshape)
+- library(edgeR)
+- library(readr)
+- library(DT)
+- library(psych)
+- library(shinyhelper)
+```
+
 You can now open the `draculR.R` script and Run from RStudio.
 
 [^fn1]: Smith, Melanie D., Shalem Y. Leemaqz, Tanja Jankovic-Karasoulos, Dale McAninch, Dylan McCullough, James Breen, Claire T. Roberts, and Katherine A. Pillman. 2022. “Haemolysis Detection in MicroRNA-Seq from Clinical Plasma Samples.” Genes 13 (7). https://doi.org/10.3390/genes13071288.
