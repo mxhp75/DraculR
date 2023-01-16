@@ -821,41 +821,64 @@ server <- function(input, output) {
            y = "Density") +
       theme_bw(base_size = 16)
     
-
-    
   })
   
   # This reactive output contains new objects and will display the histogram of 
-  # distribution difference
+  # distribution difference for uploaded counts over the background barcode
   output$dist_diff <- renderPlot({
     if(is.null(uploadData())){return ()}
     
-    # plot as histogram side by side
-    q <- ggplot() +
-      geom_histogram(data = plotData_distDiff_dCq,
+    # This code renders the barPlot/barcodePlot for public data examples
+    
+    # Background Barcode
+    ## New facet label names for haemolysis variable
+    ## needed to rename the facets
+    barcode.labs <- c("Haemolysed \n(dCq)", "Clear \n(dCq)")
+    names(barcode.labs) <- c("haemolysed", "none")
+    
+    # Make the background Barcode plot
+    backgroundDataPlot <- ggplot() +
+      
+      geom_vline(show.legend = FALSE,
+                 data = plotData_distDiff_dCq,
+                 aes(xintercept = distributionDifference,
+                     color = haemolysis),
+                 size = 1) +
+      coord_cartesian(xlim=c(0,5)) +
+      xlab("Haemolysis Metric") +
+      scale_colour_manual(values = c("#8B0000", "#29569D"),
+                          name = "Haemolysis",
+                          labels = c("Haemolysed \n(dCq)", "Clear \n(dCq)")) +
+      facet_grid(haemolysis ~ .,
+                 # move the labels from right side to left side
+                 switch = "y",
+                 # swap out the old labels for the new ones
+                 labeller = labeller(haemolysis = barcode.labs)) +
+      theme(strip.text.y = element_text(margin = margin(0)),
+            axis.title.x = element_text(size = 16),
+            axis.text.x = element_text(size = 13))
+    
+    # make the upload data bar plot
+    newDataPlot <- ggplot() +
+      
+      geom_histogram(data = distDiff(),
                      aes(x = distributionDifference,
-                         fill = haemolysis,
-                         colour = haemolysis),
+                         fill = haemoResult,
+                         colour = haemoResult),
                      breaks = seq(0,5,0.1),
                      alpha = 0.4, 
                      position = "identity",
                      lwd = 0.8) +
-      geom_histogram(
-        data = distDiff(),
-        aes(x = distributionDifference,
-            fill = haemoResult,
-            colour = haemoResult),
-        breaks = seq(0,5,0.1),
-        alpha = 0.6,
-        position = "identity",
-        lwd = 0.8) +
+      
+      coord_cartesian(xlim=c(0,5)) +
+      
       scale_fill_manual(values = c("#8B0000", "#29569D",
-                                     "#A9A9A9", "#CDCDCD"),
+                                   "#A9A9A9", "#CDCDCD"),
                         name = "Haemolysis",
                         labels = c("Caution", "Clear",
                                    "Haemolysed (dCq)", "Clear (dCq)")) +
       scale_colour_manual(values = c("#8B0000", "#29569D",
-                                   "#8B0000", "#29569D"),
+                                     "#8B0000", "#29569D"),
                           name = "Haemolysis",
                           labels = c("Caution", "Clear",
                                      "Haemolysed (dCq)", "Clear (dCq)")) +
@@ -863,35 +886,26 @@ server <- function(input, output) {
                  xintercept = 1.9,
                  col = 2,
                  lty = 2) +
-      # scale_y_continuous(labels = percent_format()) +
+
       labs(
         title = paste0("Haemolysis Metric: ", input$project),
         subtitle = paste("DraculR identified",
                          dim(filter(distDiff(),
                                     haemoResult == "Caution"))[1],
                          "samples to use with caution", sep = " "),
-        x = "Haemolysis Metric",
+        x = "",
         y = "Number of samples"
       ) +
+      
       theme_bw(base_size = 16) +
-      theme(plot.subtitle=element_text(color="#8B0000"))
+      theme(plot.subtitle = element_text(color="#8B0000"),
+            legend.position = "top")
     
-    q
-
-    # print the plot to the screen
-    # q + annotate(
-    #   geom = "text",
-    #   size = 10,
-    #   x = 3,
-    #   y = .23,
-    #   label = paste("we have identified",
-    #                 dim(filter(distDiff(),
-    #                            haemoResult == "Caution"))[1],
-    #                 "samples to use with caution", sep = " "),
-    #   colour = "red"
-    # )
-    # 
-
+    # combine both plots (this makes sure the x-axix ticks are aligned)
+    uploadCombinedPlot <- newDataPlot/backgroundDataPlot
+    # print the combined plot to the screen
+    uploadDataBarcodePlot <- uploadCombinedPlot + patchwork::plot_layout(heights = c(4,2))
+    uploadDataBarcodePlot
 
   })
   
