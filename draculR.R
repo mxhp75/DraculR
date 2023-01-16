@@ -355,7 +355,8 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                     
                                     fluidRow(
                                       column(8, offset = 0,
-                                             DT::dataTableOutput("rawCounts"))
+                                             # DT::dataTableOutput("rawCounts"))
+                                             DT::dataTableOutput("publicResults"))
                                     )),
                            
                            tabPanel("Import New Data",
@@ -448,8 +449,7 @@ server <- function(input, output) {
                header = TRUE,
                # stringsAsFactors = input$stringAsFactors)
                stringsAsFactors = FALSE)
-    
-  })
+    })
   
   # this reactive output will plot according to the public data reactive buttons
   plotDataPublic_miRNA <- reactiveValues(data = rankDist_GSE153813)
@@ -471,6 +471,14 @@ server <- function(input, output) {
   observeEvent(input$GSE105052, { rawDataPublic_miRNA$data <- countsRaw_GSE105052 })
   observeEvent(input$GSE151341, { rawDataPublic_miRNA$data <- countsRaw_GSE151341 })
   
+  # this reactive output will display the results table according to the public data reactive buttons
+  tableDataPublic_miRNA <- reactiveValues(data = rankDist_GSE153813)
+  
+  observeEvent(input$GSE153813, { tableDataPublic_miRNA$data <- rankDist_GSE153813 })
+  observeEvent(input$GSE118038, { tableDataPublic_miRNA$data <- rankDist_GSE118038 })
+  observeEvent(input$GSE105052, { tableDataPublic_miRNA$data <- rankDist_GSE105052 })
+  observeEvent(input$GSE151341, { tableDataPublic_miRNA$data <- rankDist_GSE151341 })
+  
 
   # This reactive function will calculate the distribution difference and be 
   # available in all output tabs
@@ -486,7 +494,7 @@ server <- function(input, output) {
     # identify samples with < 1 million reads
     lowCounts <- names(counts[, base::colSums(counts) < 1000000])
     
-    # remove columns/samples with readcouns less than 1 million
+    # remove columns/samples with readcounts less than 1 million
     counts <- counts[, base::colSums(counts) > 1000000]
     
     # reduce any individual count less than five to zero
@@ -583,14 +591,27 @@ server <- function(input, output) {
   })
   
   
-  output$rawCounts <- DT::renderDataTable({
+  # output$rawCounts <- DT::renderDataTable({
+  #   
+  #   rawDataPublic_miRNA$data
+  #   
+  # }, options = list(autoWidth = TRUE,
+  #                   columnDefs = list(list(list(targets='_all',
+  #                                               visible=TRUE,
+  #                                               width='90') ))))
+  
+  output$publicResults <- DT::renderDataTable({
     
-    rawDataPublic_miRNA$data
+    tableDataPublic_miRNA$data %>% 
+      dplyr::select(., Samplename = samplename,
+                    `Haemolysis Metric` = distributionDifference,
+                    `Haemolysis Result` = haemoResult,
+                    Project = project)
     
   }, options = list(autoWidth = TRUE,
-                    columnDefs = list(list(list(targets='_all',
-                                                visible=TRUE,
-                                                width='90') ))))
+                    columnDefs = list(list(list(targets = '_all',
+                                                visible = TRUE,
+                                                width = '90') ))))
   
   output$distributionDifference <- renderPlot({
     
@@ -679,6 +700,13 @@ server <- function(input, output) {
 
   })
   
+  # this reactive output contains the results table for the public data example
+  output$tableDataPublic_miRNA <- renderTable({
+    
+    tableDataPublic_miRNA$data
+    
+  })
+  
   ## Info for the Import New Data tab
   # this reactive output contains the dataset and display the file information
   output$about <- renderTable({
@@ -763,7 +791,7 @@ server <- function(input, output) {
     
   })
   
-  # This reactive output contains the dataset and display the dataset in table format
+  # This reactive output contains the user uploaded dataset and will display the dataset in table format
   output$table <- renderTable({
     if(is.null(uploadData())){return ()}
     uploadData() %>% 
@@ -824,7 +852,7 @@ server <- function(input, output) {
   })
   
   # This reactive output contains new objects and will display the histogram of 
-  # distribution difference for uploaded counts over the background barcode
+  # distribution difference for uploaded counts above the background barcode
   output$dist_diff <- renderPlot({
     if(is.null(uploadData())){return ()}
     
@@ -854,8 +882,11 @@ server <- function(input, output) {
                  switch = "y",
                  # swap out the old labels for the new ones
                  labeller = labeller(haemolysis = barcode.labs)) +
+      # reduce the vertical margin between facets
       theme(strip.text.y = element_text(margin = margin(0)),
+            # increase the x-axis title font size
             axis.title.x = element_text(size = 16),
+            # set the x-axis text font size
             axis.text.x = element_text(size = 13))
     
     # make the upload data bar plot
@@ -918,13 +949,18 @@ server <- function(input, output) {
                        heigth = 200,
                        width = 200))
     else
-      tabsetPanel(tabPanel("About file", tableOutput("about")),
-                  tabPanel("Data", tableOutput("table")),
-                  tabPanel("Results Summary", tableOutput("sum")),
+      tabsetPanel(tabPanel("About file",
+                           tableOutput("about")),
+                  
+                  tabPanel("Data",
+                           tableOutput("table")),
+                  
+                  tabPanel("Results Summary",
+                           tableOutput("sum")),
+                  
                   tabPanel("Distributions", 
-                           br(),
+                           tags$br(),
                            
-
                            fluidRow(
                              selectInput(inputId = "select",
                                          label = "Samplename",
@@ -933,7 +969,13 @@ server <- function(input, output) {
                              fluidRow(
                                plotOutput("distributions")
                              )),
-                  tabPanel("Haemolysis Metric", plotOutput("dist_diff")))
+                  
+                  tabPanel("Haemolysis Metric",
+                           tags$br(),
+                           
+                           fluidRow(
+                           plotOutput("dist_diff"))
+                  ))
   })
   
   
