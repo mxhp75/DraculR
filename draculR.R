@@ -1,6 +1,7 @@
 library(dplyr)
 library(plyr)
 library(ggplot2)
+library(patchwork)
 library(shiny)
 library(ggrepel)
 library(scales) # For percent_format()
@@ -593,62 +594,89 @@ server <- function(input, output) {
   
   output$distributionDifference <- renderPlot({
     
+    # calculate the number of samples with a HM >= 1.9 Caution
     caution <- dim(filter(plotDataPublic_miRNA$data, haemoResult == "Caution"))
   
-    # plot as histogram side by side
-    p <- ggplot() +
-      geom_histogram(data = plotData_distDiff_dCq,
+    # This code renders the barPlot/barcodePlot for public data examples
+
+    # Background Barcode
+    ## New facet label names for haemolysis variable
+    ## needed to rename the facets
+    barcode.labs <- c("Haemolysed \n(dCq)", "Clear \n(dCq)")
+    names(barcode.labs) <- c("haemolysed", "none")
+    
+    # Make the background Barcode plot
+    backgroundDataPlot <- ggplot() +
+      geom_vline(show.legend = FALSE,
+                 data = plotData_distDiff_dCq,
+                 aes(xintercept = distributionDifference,
+                     color = haemolysis),
+                 size = 1) +
+      coord_cartesian(xlim=c(0,5)) +
+      xlab("Haemolysis Metric") +
+      scale_colour_manual(values = c("#8B0000", "#29569D"),
+                          name = "Haemolysis",
+                          labels = c("Haemolysed \n(dCq)", "Clear \n(dCq)")) +
+      facet_grid(haemolysis ~ .,
+                 # move the labels from right side to left side
+                 switch = "y",
+                 # swap out the old labels for the new ones
+                 labeller = labeller(haemolysis = barcode.labs)) +
+      theme(strip.text.y = element_text(margin = margin(0)),
+            axis.title.x = element_text(size = 16),
+            axis.text.x = element_text(size = 13))
+    
+    # public data example barplot
+    newDataPlot <- ggplot() +
+      
+      geom_histogram(data = plotDataPublic_miRNA$data,
                      aes(x = distributionDifference,
-                         fill = haemolysis,
-                         colour = haemolysis),
+                         fill = haemoResult,
+                         colour = haemoResult),
                      breaks = seq(0,5,0.1),
-                     alpha = 0.6, 
+                     alpha = 0.4, 
                      position = "identity",
                      lwd = 0.8) +
-      geom_histogram(
-        data = plotDataPublic_miRNA$data,
-        aes(x = distributionDifference,
-            fill = haemoResult,
-            colour = haemoResult),
-        breaks = seq(0,5,0.1),
-        alpha = 0.6, 
-        position = "identity",
-        lwd = 0.8) +
-      scale_fill_manual(values = c("#8B0000", "#29569D",
-                                   "#A9A9A9", "#CDCDCD"),
+      # xlim(0,5) +
+      coord_cartesian(xlim=c(0,5)) +
+      
+    scale_fill_manual(values = c("#8B0000", "#29569D",
+                                 "#A9A9A9", "#CDCDCD"),
+                      name = "Haemolysis",
+                      labels = c(paste("Caution ", plotDataPublic_miRNA$data$project[1], sep = ""),
+                                 paste("Clear ", plotDataPublic_miRNA$data$project[1], sep = ""),
+                                 "Haemolysed (dCq)", "Clear (dCq)")) +
+    scale_colour_manual(values = c("#8B0000", "#29569D",
+                                   "#8B0000", "#29569D"),
                         name = "Haemolysis",
-                        labels = c(paste("Caution ", plotDataPublic_miRNA$data$project[1], sep = ""), paste("Clear ", plotDataPublic_miRNA$data$project[1], sep = ""),
+                        labels = c(paste("Caution ", plotDataPublic_miRNA$data$project[1], sep = ""),
+                                   paste("Clear ", plotDataPublic_miRNA$data$project[1], sep = ""),
                                    "Haemolysed (dCq)", "Clear (dCq)")) +
-      scale_colour_manual(values = c("#8B0000", "#29569D",
-                                     "#8B0000", "#29569D"),
-                          name = "Haemolysis",
-                          labels = c(paste("Caution ", plotDataPublic_miRNA$data$project[1], sep = ""), paste("Clear ", plotDataPublic_miRNA$data$project[1], sep = ""),
-                                     "Haemolysed (dCq)", "Clear (dCq)")) +
-      geom_vline(show.legend = FALSE,
-                 xintercept = 1.9,
-                 col = 2,
-                 lty = 2) +
-      scale_y_continuous(breaks = c(seq(1:15))) +
       labs(
-        x = "Haemolysis Metric",
+        x = "",
         y = "Number of samples",
         subtitle = paste("DraculR identified", caution[1], "samples to use with caution", sep = " ")
       ) +
       ggtitle(paste0(plotDataPublic_miRNA$data$project[1])) +
+
+      # add a vertial dotted line to idicate the HM cut-off
+      geom_vline(show.legend = FALSE,
+                 xintercept = 1.9,
+                 col = 2,
+                 lty = 2) +
+      
       theme_bw(base_size = 16) +
-      theme(plot.subtitle=element_text(color="#8B0000"))
+      theme(plot.subtitle = element_text(color="#8B0000"),
+            legend.position = "top")
     
-    p
-    
-    # p + annotate(
-    #   geom = "text",
-    #   size = 10,
-    #   x = 3,
-    #   y = .23,
-    #   label = paste("we have identified", caution[1], "samples to use with caution", sep = " "),
-    #   colour = "red"
-    # )
-    
+    # combine both plots (this makes sure the x-axix ticks are aligned)
+    combinedPlot <- newDataPlot/backgroundDataPlot
+    # layout with patchwork
+    publicDataBarcodePlot <- combinedPlot +
+      patchwork::plot_layout(heights = c(2,1))
+    # print the combined plot to the screen
+    publicDataBarcodePlot
+
   })
   
   ## Info for the Import New Data tab
