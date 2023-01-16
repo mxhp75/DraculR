@@ -7,16 +7,16 @@ This repository contains all code and data required to run DraculR, including an
 
 The test dataset can be found <a href="https://github.com/mxhp75/DraculR/tree/main/dataExample">here</a>. If you choose to test DraculR using the example data, please remember to select "10" as the number of your smallest group for filtering, and select the pregnancy associated miRNA:
 
-- "hsa-miR-186-5p"
-- "hsa-miR-425-5p"
-- "hsa-miR-25-3p"
-- "hsa-miR-363-3p"
-- "hsa-miR-183-5p"
-- "hsa-miR-451a"
-- "hsa-miR-182-5p"
-- "hsa-miR-191-5p"
-- "hsa-miR-a94-5p"
-- "hsa-miR-20b-5p" 
+- hsa-miR-186-5p
+- hsa-miR-425-5p
+- hsa-miR-25-3p
+- hsa-miR-363-3p
+- hsa-miR-183-5p
+- hsa-miR-451a
+- hsa-miR-182-5p
+- hsa-miR-191-5p
+- hsa-miR-a94-5p
+- hsa-miR-20b-5p
 
 for removal from the calculation before calculating the Haemolysis Metric for these data.
 
@@ -35,21 +35,21 @@ To create a local copy of the DraculR tool simply open your terminal and type th
 
 Please ensure the following packages are installed on your local machine:
 ```r
-- library(dplyr)
-- library(plyr)
-- library(ggplot2)
-- library(patchwork)
-- library(shiny)
-- library(ggrepel)
-- library(scales) # For percent_format()
-- library(tidyr)
-- library(magrittr)
-- library(reshape)
-- library(edgeR)
-- library(readr)
-- library(DT)
-- library(psych)
-- library(shinyhelper)
+library(dplyr)
+library(plyr)
+library(ggplot2)
+library(patchwork)
+library(shiny)
+library(ggrepel)
+library(scales)
+library(tidyr)
+library(magrittr)
+library(reshape)
+library(edgeR)
+library(readr)
+library(DT)
+library(psych)
+library(shinyhelper)
 ```
 
 You can now open the `draculR.R` script and Run from RStudio.
