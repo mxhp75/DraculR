@@ -12,6 +12,7 @@ library(edgeR)
 library(readr)
 library(DT)
 library(psych)
+library(tools)
 library(shinyhelper)
 
 ##### User defined functions #####
@@ -327,6 +328,13 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                     ),
                                     
                                     fluidRow(
+                                      
+                                      column(12,
+                                             tags$h5(HTML(paste("To import new data, move to the",
+                                                           tags$b("Import new data"), "tab. From here click",
+                                                           tags$b("Browse"),
+                                                           "to access the miRNA expression value table (either as raw counts or normalised CPMs).")))),
+                                      
                                       column(12,
                                              tags$h5("DraculR requires all input count files to be formatted as follows:")
                                       )
@@ -337,7 +345,7 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       column(12,
                                              tags$div(
                                                tags$ul(
-                                                 tags$h5(
+                                                 tags$h4(
                                                    tags$li("Comma or tab delimited."),
                                                    tags$li("Samples in columns, miRNA expression observations in rows."),
                                                    tags$li("Column with miRNA names should have the column label “mirna_name”."),
@@ -352,18 +360,13 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                              )))),
                                     
                                     br(),
+                                    
                                     fluidRow(
                                       
                                       column(8, 
-                                             tags$div(HTML(paste("To import new data, move to the",
-                                                                 tags$b("Import new data"), "tab. From here click",
-                                                                 tags$b("Browse"),
-                                                                 "to access the required raw counts table from your computer. Importing a new file will populate the main page with a set of tabs that allow you to navigate through the new information. Your count data needs to be either a comma or tab delimited file with samples in the columns and miRNA count observations in the rows. Please ensure your column of miRNA names is titled",
-                                                                 tags$b(paste("miRNA", "name", sep = "_")), "and that the miRNA names are in a",
-                                                                 tags$b(paste("hsa", "miR", "123", "3p", sep = "-")), "format. Samplenames need to be in a",
-                                                                 tags$b(paste("sample", "condition", sep = "_")), "format and should not include white space or special characters.",
-                                                                 sep = " ")))
-                                      )),
+                                             tags$h4("Importing a new file will populate the main page with a set of tabs that allow you to navigate through the new information.")
+                                             )
+                                      ),
                                     
                                     fluidRow(
                                       
@@ -491,6 +494,31 @@ ui <- fluidPage(navbarPage(title = "DraculR",
 
 )))
   
+# Input Validation Functions
+is_csv_or_tsv <- function(input_file, radio_separator) {
+  file1 <- input_file
+  if(radio_separator == ",") { 
+    sep_str = "csv"
+  } else if(radio_separator == "\t") { 
+    sep_str = "tsv"
+  } else {
+    print("Error: Unable to deduce file type extension")
+  }
+  
+  if (identical(tolower(tools::file_ext(file1$datapath)), sep_str)) {
+    NULL
+  } else {
+    print(paste0("Error: Uploaded file extension doesn't match the chosen delimiter, should be: \"", sep_str, "\""))
+  }
+}
+
+has_correct_header <- function(df) {
+  if("mir_name" %in% colnames(df)) {
+    NULL
+  } else {
+    print("Input file must have a column named \"mir_name\" (containing miR IDs). Could not find a column by this name.")
+  }
+}
 
 server <- function(input, output) {
   
@@ -503,13 +531,19 @@ server <- function(input, output) {
   uploadData <- reactive({
     file1 <- input$rawDataFile
     if(is.null(file1)){return()} 
-    read.table(file = file1$datapath,
-               sep = input$sep,
-               header = TRUE,
-               # stringsAsFactors = input$stringAsFactors)
-               stringsAsFactors = FALSE)
-    })
-  
+    
+    validate(is_csv_or_tsv(input$rawDataFile, input$sep))
+    
+    temp_df <- read.table(file = file1$datapath,
+                          sep = input$sep,
+                          header = TRUE,
+                          # stringsAsFactors = input$stringAsFactors)
+                          stringsAsFactors = FALSE)
+    
+    validate(has_correct_header(temp_df))
+    temp_df
+  })
+
   # this reactive output will plot according to the public data reactive buttons
   plotDataPublic_miRNA <- reactiveValues(data = rankDist_GSE153813)
   
