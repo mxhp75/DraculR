@@ -296,12 +296,13 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                                tags$b("Public Data Example"),
                                                "tab allows you to click through the plot output and raw data of four datasets available on NCBI GEO that we have run through our method. Samples we consider",
                                                tags$b("Clear"), "are seen in blue, those we consider should be used with",
-                                               tags$b("Caution"), "are seen in red",
+                                               tags$b("Caution"), "are seen in red.",
                                                sep = " "
-                                             )))),
+                                             ))))),
                                       
                                       tags$br(),
                                       
+                                    fluidRow(
                                       column(8,
                                              tags$img(src = "GSE153813_instructionsTab.png",
                                                       height = 400,
@@ -313,6 +314,16 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                                       width = 300))
                                       
                                       
+                                    ),
+                                    
+                                    fluidRow(
+                                      column(8,
+                                             tags$h5(HTML(paste(
+                                               "The histogram represents the queried dataset where three samples were flagged to be used with caution (red) and six were classified as clear of haemolysis (blue).",
+                                               "As a reference, the barcode-style plots below the histogram display the Haemolysis Metric values of samples from an example dataset validated using the ΔCq method",
+                                               tags$a(href="http://dx.doi.org/10.3390/genes13071288", "Smith et al."),
+                                                "; red for those identified as haemolysed (ΔCq>7), blue for those classified as 'Clear' of haemolysis (ΔCq<7)."
+                                             ))))
                                     ),
                                     
                                     fluidRow(
