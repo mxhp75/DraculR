@@ -1,10 +1,13 @@
+library(BiocManager)
+options(repos = BiocManager::repositories())
+
 library(dplyr)
 library(plyr)
 library(ggplot2)
 library(patchwork)
 library(shiny)
 library(ggrepel)
-library(scales) # For percent_format()
+library(scales)
 library(tidyr)
 library(magrittr)
 library(reshape)
@@ -724,7 +727,6 @@ server <- function(input, output) {
     
     geomTextInfo <- data.frame(
       label = c("Haemolysed \n(dCq)", "Clear \n(dCq)"),
-      # label = c("label1", "label2"),
       haemolysis = c("haemolysed", "none")
     )
     
