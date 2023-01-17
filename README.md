@@ -15,10 +15,12 @@ The test dataset can be found <a href="https://github.com/mxhp75/DraculR/tree/ma
 - hsa-miR-451a
 - hsa-miR-182-5p
 - hsa-miR-191-5p
-- hsa-miR-a94-5p
+- hsa-miR-94-5p
 - hsa-miR-20b-5p
 
 for removal from the calculation before calculating the Haemolysis Metric for these data.
+
+You may access the DraculR Shiny.io page <a href="https://mxhp75.shinyapps.io/DraculR/)">here</a>.
 
 ### How to clone this repository
 
@@ -28,12 +30,13 @@ The command `$ git clone` is used to make an exact copy of an existing Git repos
 
 To create a local copy of the DraculR tool simply open your terminal and type the following:
 
-```r
+```bash
   $ cd folder/to/clone-into/
   $ git clone https://github.com/mxhp75/DraculR
 ```
 
 Please ensure the following packages are installed on your local machine:
+
 ```r
 library(dplyr)
 library(plyr)
