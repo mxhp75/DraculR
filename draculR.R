@@ -304,8 +304,8 @@ ui <- fluidPage(navbarPage(title = "DraculR",
                                       
                                       column(8,
                                              tags$img(src = "GSE153813_instructionsTab.png",
-                                                      height = 300,
-                                                      width = 600)),
+                                                      height = 400,
+                                                      width = 800)),
                                       
                                       column(4,
                                              tags$img(src = "drac.png",
