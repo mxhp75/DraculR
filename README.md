@@ -20,7 +20,7 @@ The test dataset can be found <a href="https://github.com/mxhp75/DraculR/tree/ma
 
 for removal from the calculation before calculating the Haemolysis Metric for these data.
 
-You may access the DraculR Shiny.io page <a href="https://mxhp75.shinyapps.io/DraculR/)">here</a>.
+You may access the DraculR Shiny.io page <a href="https://mxhp75.shinyapps.io/DraculR">here</a>.
 
 ### How to clone this repository
 
