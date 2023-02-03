@@ -1,5 +1,5 @@
-library(BiocManager)
-options(repos = BiocManager::repositories())
+# library(BiocManager)
+# options(repos = BiocManager::repositories())
 
 library(dplyr)
 library(plyr)
@@ -12,6 +12,7 @@ library(tidyr)
 library(magrittr)
 library(reshape)
 library(edgeR)
+options(repos = BiocManager::repositories())
 library(readr)
 library(DT)
 library(psych)
@@ -523,6 +524,17 @@ has_correct_header <- function(df) {
   }
 }
 
+at_least_one_library_one_million_reads <- function(x) {
+  
+  colSumLibrary <- summarise_all(x, ~if(is.numeric(.)) sum(.) else "Total")
+
+  if(any(colSumLibrary>1000000)) {
+    NULL
+  } else {
+    print("Input file contains no libraries with greater than one million reads.")
+  }
+}
+
 server <- function(input, output) {
   
   # make sure help functions are active
@@ -535,16 +547,28 @@ server <- function(input, output) {
     file1 <- input$rawDataFile
     if(is.null(file1)){return()} 
     
-    validate(is_csv_or_tsv(input$rawDataFile, input$sep))
+    shiny::validate(is_csv_or_tsv(input$rawDataFile, input$sep))
     
     temp_df <- read.table(file = file1$datapath,
                           sep = input$sep,
                           header = TRUE,
-                          # stringsAsFactors = input$stringAsFactors)
                           stringsAsFactors = FALSE)
     
-    validate(has_correct_header(temp_df))
+    shiny::validate(has_correct_header(temp_df))
     temp_df
+
+    temp_counts <- read.table(file = file1$datapath,
+                              sep = input$sep,
+                              header = TRUE,
+                              stringsAsFactors = FALSE) %>%
+      dplyr::mutate_if(is.integer, as.numeric) %>%
+      as.data.frame() %>%
+      tibble::column_to_rownames("mir_name") %>%
+      replace(is.na(.), 0)
+
+    shiny::validate(at_least_one_library_one_million_reads(temp_counts))
+    temp_df
+    
   })
 
   # this reactive output will plot according to the public data reactive buttons
