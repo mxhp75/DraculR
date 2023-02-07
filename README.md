@@ -15,7 +15,7 @@ The test dataset can be found <a href="https://github.com/mxhp75/DraculR/tree/ma
 - hsa-miR-451a
 - hsa-miR-182-5p
 - hsa-miR-191-5p
-- hsa-miR-94-5p
+- hsa-miR-194-5p
 - hsa-miR-20b-5p
 
 for removal from the calculation before calculating the Haemolysis Metric for these data.
